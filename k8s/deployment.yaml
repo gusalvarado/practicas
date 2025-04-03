@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-uploader
+  labels:
+    app: s3-uploader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-uploader
+  template:
+    metadata:
+      labels:
+        app: s3-uploader
+    spec:
+      serviceAccountName: s3-uploader-sa
+      containers:
+        - name: s3-uploader
+          image: your-dockerhub-username/s3-uploader:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: s3-config
+                  key: S3_BUCKET
