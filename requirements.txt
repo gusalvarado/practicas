@@ -1,2 +1,8 @@
-flask
 boto3
+botocore
+flask
+gunicorn
+streamlit
+crewai
+crewai_tools
+Pillow

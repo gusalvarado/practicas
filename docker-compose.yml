@@ -1,0 +1,15 @@
+version: '3.2'
+services:
+  app:
+    image: eks-course:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:8501"
+    volumes:
+      - ~/.aws/credentials:/root/.aws/credentials:ro
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://host.docker.internal:81
+    command: ["streamlit", "run", "app.py"]

@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EKS Cluster with Node Group
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+
+Resources:
+  EKSCluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Name: !Sub "${AWS::StackName}"
+      RoleArn: !GetAtt EKSClusterRole.Arn
+      ResourcesVpcConfig:
+        SubnetIds:
+          - !ImportValue !Sub "${StackName}-PublicSubnet1"
+          - !ImportValue !Sub "${StackName}-PublicSubnet2"
+          - StackName: network
+
+  ClusterSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub "${AWS::StackName} EKS Cluster Security Group"
+      VpcId: !ImportValue
+        - !Sub "${StackName}-VPCId"
+        - StackName: network
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-EKSClusterSG"
+
+  EKSLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "${AWS::StackName}-EKSLoadBalancer"
+      Subnets:
+        - !ImportValue !Sub "${StackName}-PublicSubnet1"
+        - !ImportValue !Sub "${StackName}-PublicSubnet2"
+      SecurityGroups:
+        - !Ref ClusterSecurityGroup
+      Scheme: internet-facing
+
+  EKSClusterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: eks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: EKSClusterPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - eks:CreateCluster
+                  - eks:DescribeCluster
+                Resource: '*'
+
+  NodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      ClusterName: !Ref EKSCluster
+      NodeRole: !GetAtt NodeGroupRole.Arn
+      Subnets:
+        - !ImportValue !Sub "${StackName}-PrivateSubnet1"
+        - !ImportValue !Sub "${StackName}-PrivateSubnet2"
+      ScalingConfig:
+        DesiredSize: 2
+        MaxSize: 3
+        MinSize: 1
+      InstanceTypes:
+        - t3.medium
+      AmiType: AL2_x86_64
+      NodegroupName: !Sub "${ClusterName}-nodegroup"
+
+  ESNodeGroupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: EKSNodeGroupPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - eks:DescribeNodegroup
+                  - eks:ListNodegroups
+                Resource: '*'

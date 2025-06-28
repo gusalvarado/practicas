@@ -1,27 +1,78 @@
-from flask import Flask, request, jsonify, render_template
-import boto3
+# ui/app.py
+"""
+Main application logic for the research dashboard
+"""
+import sys
 import os
-from botocore.exceptions import BotoCoreError, NoCredentialsError
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
-app = Flask(__name__)
+from crew import ContentCrew
 
-S3_BUCKET = os.environ.get("S3_BUCKET", "your-default-bucket-name")
+import streamlit as st
 
-@app.route("/", methods=["GET"])
-def index():
-    return render_template("upload.html")
+from ui.config.settings import configure_page, RESEARCH_CONFIG
+from ui.components.sidebar import render_sidebar
+from ui.components.research import render_research_input, display_research_results, display_error
+from ui.styles.themes import apply_sidebar_styling, apply_main_content_styling
 
-@app.route("/upload", methods=["POST"])
-def upload():
-    file = request.files.get("file")
-    if not file:
-        return jsonify({"error": "No file uploaded"}), 400
+class ResearchDashboard:
+    """Main dashboard application class"""
 
-    key = f"uploads/{file.filename}"
+    def __init__(self):
+        self.crew = None
 
-    try:
-        s3 = boto3.client("s3")  # Will use instance role via metadata
-        s3.upload_fileobj(file, S3_BUCKET, key)
-        return jsonify({"message": "Upload successful", "key": key})
-    except (BotoCoreError, NoCredentialsError) as e:
-        return jsonify({"error": str(e)}), 500
+    def setup(self):
+        """Setup the dashboard"""
+        configure_page()
+        apply_main_content_styling()
+        # Apply default sidebar styling
+        apply_sidebar_styling("dark_blue")
+
+    def run(self):
+        """Run the main dashboard application"""
+        self.setup()
+
+        # Render sidebar and get selected theme
+        selected_theme = render_sidebar()
+
+        # Render main content
+        topic, investigate_button = render_research_input()
+
+        # Handle investigation
+        if investigate_button:
+            if topic and topic.strip():
+                self._run_investigation(topic.strip())
+            else:
+                st.warning("Please enter a topic to investigate.")
+
+    def _run_investigation(self, topic):
+        """Run the research investigation"""
+        # Validate topic length
+        if len(topic) > RESEARCH_CONFIG["max_topic_length"]:
+            st.error(f"Topic is too long. Please limit to {RESEARCH_CONFIG['max_topic_length']} characters.")
+            return
+
+        with st.spinner(RESEARCH_CONFIG["spinner_text"]):
+            inputs = {'topic': topic}
+
+            try:
+                # Initialize crew if not already done
+                if not self.crew:
+                    self.crew = ContentCrew().crew()
+
+                # Run the investigation
+                result = self.crew.kickoff(inputs=inputs)
+
+                # Display results
+                display_research_results(result, topic)
+
+            except Exception as e:
+                display_error(e)
+
+def main():
+    """Main entry point"""
+    dashboard = ResearchDashboard()
+    dashboard.run()
+
+if __name__ == "__main__":
+    main()
