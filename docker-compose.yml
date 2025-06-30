@@ -12,4 +12,4 @@ services:
     environment:
       - NODE_ENV=production
       - API_URL=http://host.docker.internal:81
-    command: ["streamlit", "run", "app.py"]
+    command: ["python", "run_simulation.py"]

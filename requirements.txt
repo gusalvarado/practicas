@@ -1,8 +1,7 @@
 boto3
 botocore
 flask
-gunicorn
 streamlit
 crewai
-crewai_tools
+crewai-tools
 Pillow
