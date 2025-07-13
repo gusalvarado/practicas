@@ -1,8 +1,0 @@
-tasks:
-  - action: repair
-    applicateble_to: ["Engineer"]
-    description: "Fixes critical systems failures in a room"
-
-  - action: standby
-    applicateble_to: ["Engineer"]
-    description: "Waits for further instructions or system status updates"

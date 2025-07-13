@@ -1,7 +1,4 @@
-boto3
-botocore
-flask
 streamlit
+numpy
+redis
 crewai
-crewai-tools
-Pillow

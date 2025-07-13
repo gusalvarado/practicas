@@ -1,7 +1,7 @@
 version: '3.2'
 services:
-  app:
-    image: eks-course:latest
+  dashboard:
+    image: office-simulation:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,7 +9,5 @@ services:
       - "80:8501"
     volumes:
       - ~/.aws/credentials:/root/.aws/credentials:ro
-    environment:
-      - NODE_ENV=production
-      - API_URL=http://host.docker.internal:81
-    command: ["python", "run_simulation.py"]
+      - ./:/app/
+    command: ["streamlit", "run", "main.py"]
