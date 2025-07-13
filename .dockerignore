@@ -10,3 +10,4 @@ infra/
 README.md
 .python-version
 Dockerfile
+__pycache__
