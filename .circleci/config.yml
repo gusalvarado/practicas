@@ -1,0 +1,32 @@
+version: 2.1
+executors:
+  docker-executor:
+    docker:
+      - image: cimg/python:3.12
+jobs:
+  build-and-push:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.24
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update && sudo apt-get install -y awscli
+      - run:
+          name: Authenticate with AWS
+          command: |
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 693041643423.dkr.ecr.us-east-1.amazonaws.com
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_SHA1} .
+      - run:
+          name: Push Docker Image
+          command: |
+            docker push 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_SHA1}
+workflows:
+  build-and-push:
+    jobs:
+      - build-and-push

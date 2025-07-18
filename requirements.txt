@@ -1,4 +1,8 @@
+fastapi
+uvicorn
 streamlit
-numpy
-redis
-crewai
+langchain
+unstructured
+pydantic
+langchain_aws
+langchain_core
