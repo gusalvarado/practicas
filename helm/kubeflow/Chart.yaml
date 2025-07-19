@@ -1,0 +1,4 @@
+apiVersion: v2
+name: kubeflow
+description: Kubeflow pipeline component using ECR image
+version: 0.1.0
