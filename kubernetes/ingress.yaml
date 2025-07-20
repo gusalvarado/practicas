@@ -1,0 +1,65 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aip3-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: aip3
+    alb.ingress.kubernetes.io/load-balancer-name: aip3-alb
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    external-dns.alpha.kubernetes.io/hostname: aip3.lat,www.aip3.lat
+spec:
+  ingressClassName: alb
+  rules:
+    - host: aip3.lat
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-server
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-server
+                port:
+                  number: 80
+          - path: /argo
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server-proxy
+                port:
+                  number: 80
+    - host: www.aip3.lat
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-server
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-server
+                port:
+                  number: 80
+          - path: /argo
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server-proxy
+                port:
+                  number: 80

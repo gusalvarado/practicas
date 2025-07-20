@@ -1,5 +1,0 @@
-apiVersion: v2
-name: ollama-server
-description: Helm chart for Ollama in EKS
-version: 0.1.0
-appVersion: "latest"

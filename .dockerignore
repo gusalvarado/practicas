@@ -2,3 +2,4 @@ infra/
 helm/
 .git/
 .gitignore
+kubernetes/
