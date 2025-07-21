@@ -4,20 +4,20 @@ metadata:
   name: aip3-ingress
   namespace: default
   annotations:
-    alb.ingress.kubernetes.io/backend-protocol: "HTTP"
-    alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/load-balancer-name: aip3-alb
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:693041643423:certificate/c9ce6d3e-1dee-4c38-be1a-0496919f93fb
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
 spec:
   ingressClassName: alb
   tls:
     - hosts:
-      - aip3.lat
-      - www.aip3.lat
+        - aip3.lat
+        - www.aip3.lat
   rules:
     - host: aip3.lat
       http:

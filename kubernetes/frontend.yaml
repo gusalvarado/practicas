@@ -12,14 +12,19 @@ spec:
     metadata:
       labels:
         app: frontend-server
+      annotations:
+        argocd-image-updater.argoproj.io/image-list-frontend-server: 693041643423.dkr.ecr.us-east-1.amazonaws/eks-curso
+        argocd-image-updater.argoproj.io/frontend-server.update-strategy: latest
+        argocd-image-updater.argoproj.io/write-back-method: git
+        argocd-image-updater.argoproj.io/git-branch: main
     spec:
       containers:
         - name: frontend-server
-          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:0b4a5d4dbe07bc4d959fcd247cac801d00fd268f
+          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:5
           command: ["streamlit", "run", "dashboard.py", "--server.port", "80"]
           env:
             - name: API_URL
-              value: https://aip3.lat/api
+              value: https://aip3.lat
           ports:
             - containerPort: 80
 ---
