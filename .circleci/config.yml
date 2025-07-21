@@ -21,11 +21,11 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_SHA1} .
+            docker build -t 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_BUILD_NUM} .
       - run:
           name: Push Docker Image
           command: |
-            docker push 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_SHA1}
+            docker push 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:${CIRCLE_BUILD_NUM}
 workflows:
   build-and-push:
     jobs:

@@ -17,6 +17,9 @@ spec:
         - name: frontend-server
           image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:0b4a5d4dbe07bc4d959fcd247cac801d00fd268f
           command: ["streamlit", "run", "dashboard.py", "--server.port", "80"]
+          env:
+            - name: API_URL
+              value: https://aip3.lat/api
           ports:
             - containerPort: 80
 ---

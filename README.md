@@ -1,5 +1,6 @@
 argocd installation:
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/crds.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
