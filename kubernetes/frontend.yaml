@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend-server
-          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:9507150f42f54d75746aeabf71a7b0a2c56968e9
+          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:0b4a5d4dbe07bc4d959fcd247cac801d00fd268f
           command: ["streamlit", "run", "dashboard.py", "--server.port", "80"]
           ports:
             - containerPort: 80

@@ -1,5 +1,5 @@
-import os, json, requests
 from typing import Type
+import os, json, requests
 
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
@@ -11,7 +11,7 @@ class BrowserToolInput(BaseModel):
 class BrowserTool(BaseTool):
   name: str = "browser_tool"
   description: str = "A tool for browsing the web"
-  website: str = Field(..., description="The URL to browse")
+  args_schema: Type[BaseModel] = BrowserToolInput
 
   def _run(self, website: str) -> str:
     website = "https://chrome.browserless.io/content"
