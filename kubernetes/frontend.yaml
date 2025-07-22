@@ -24,7 +24,7 @@ spec:
           command: ["streamlit", "run", "dashboard.py", "--server.port", "80"]
           env:
             - name: API_URL
-              value: https://aip3.lat
+              value: https://aip3.lat/api
           ports:
             - containerPort: 80
 ---

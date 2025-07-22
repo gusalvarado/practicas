@@ -1,6 +1,9 @@
 import os
 import requests
 import streamlit as st
+from theme import theme
+
+theme()
 
 API_URL = os.getenv("API_URL", "http://backend:8080")
 idea = st.text_input("Enter your idea:")

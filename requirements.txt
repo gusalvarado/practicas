@@ -6,3 +6,5 @@ unstructured
 pydantic
 langchain_aws
 langchain_core
+python-multipart
+boto3
