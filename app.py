@@ -1,3 +1,4 @@
+from os import pread
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.idea_expander_api import routes as idea_expander_api
@@ -12,6 +13,7 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"],
 )
-app.include_router(upload_api)
-app.include_router(health_router)
-app.include_router(idea_expander_api)
+PREFIX = "/api"
+app.include_router(upload_api, prefix=PREFIX)
+app.include_router(health_router, prefix=PREFIX)
+app.include_router(idea_expander_api, prefix=PREFIX)
