@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend-server
-          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:5
+          image: 693041643423.dkr.ecr.us-east-1.amazonaws.com/eks-curso:latest
           command: ["streamlit", "run", "dashboard.py", "--server.port", "80"]
           env:
             - name: API_URL

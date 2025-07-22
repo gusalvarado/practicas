@@ -21,6 +21,14 @@ vpc:
 
 iam:
   withOIDC: true
+  serviceAccounts:
+    - metadata:
+        name: fluent-bit
+        namespace: amazon-cloudwatch
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+      roleName: fluent-bit-role
+      roleOnly: false
 
 nodeGroups:
   - name: app-node-group

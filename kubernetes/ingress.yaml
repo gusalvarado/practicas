@@ -43,6 +43,13 @@ spec:
                 name: argocd-server
                 port:
                   number: 80
+          - path: /dashboard
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana-proxy
+                port:
+                  number: 80
     - host: www.aip3.lat
       http:
         paths:
