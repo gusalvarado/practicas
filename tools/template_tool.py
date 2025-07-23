@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import shutil
@@ -6,6 +7,8 @@ from pathlib import Path
 
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
+
+CONFIG_DIR = os.getenv("CONFIG_DIR", "config/")
 
 class ListTemplatesInput(BaseTool):
     input: str = Field(..., description="The input to be processed")

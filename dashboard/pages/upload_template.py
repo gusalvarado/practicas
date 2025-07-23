@@ -2,6 +2,9 @@ import os
 import sys
 from pathlib import Path
 import streamlit as st
+from theme import theme
+
+theme()
 
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 from utils.s3_uploader import upload_file

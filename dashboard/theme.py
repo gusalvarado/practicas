@@ -3,8 +3,7 @@ import streamlit as st
 def theme():
   st.set_page_config(
     page_title="Kurso AI",
-    page_icon="/assets/favicon.png",
-    layout="wide",
+    page_icon="assets/favicon.png"
   )
   st.markdown(
     """
