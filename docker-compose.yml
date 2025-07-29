@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["streamlit", "run", "app.py"]
+    ports:
+      - 80:8501
+    volumes:
+      - ./:/app
+      - ~/.aws:/root/.aws
+  db:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: kurso
+      POSTGRES_PASSWORD: kurso34
+      POSTGRES_DB: kurso_db
+    volumes:
+      - kurso_db:/var/lib/postgresql/data
+volumes:
+  kurso_db:
