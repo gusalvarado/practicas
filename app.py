@@ -1,23 +1,30 @@
 import streamlit as st
-from tools.auth import Authenticator, admin_only, role_required
+from core.chat import chat
+from tools.auth import Authenticator
+from tools.sessions import get_session
 
 auth = Authenticator()
-st.session_state.setdefault("authenticated", False)
-st.session_state.setdefault("user_info", None)
+auth.restore_session()
 
-if not st.session_state.authenticated:
+st.session_state.setdefault("view", "Home")
+
+if not st.session_state.get("authenticated"):
     auth.login()
+    st.stop()
 else:
     auth.logout()
     user = st.session_state.user_info
-    st.sidebar.success(f"Logged in as {user['name']} ({user['role']})")
+    st.sidebar.success(f"{user['name']} ({user['role']})")
 
-@admin_only
-def show_admin_page():
-    st.subheader("Admin Page")
-    st.write("This is the admin page")
+    menu = ["Chat"] if user["role"] == "admin" else ["Chat"]
+    st.session_state.view = st.radio("Navigate", menu, horizontal=True)
 
-@role_required(["admin", "user"])
-def show_user_page():
-    st.subheader("User Page")
-    st.write("This is the user page")
+    st.write("Session ID:", st.session_state.get("session_id"))
+    st.write("Authenticated:", st.session_state.get("authenticated"))
+    st.write("User Info:", st.session_state.get("user_info"))
+
+    match st.session_state.view:
+        case "Chat":
+            chat()
+        case _:
+            st.error("Invalid view")
