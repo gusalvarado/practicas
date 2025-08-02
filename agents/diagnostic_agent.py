@@ -1,22 +1,18 @@
-from langchain.agents import AgentType
-from langchain.chains.llm import LLMChain
-from langchain.agents import initialize_agent
-from core.bedrock_client import get_bedrock_client
+from tabnanny import verbose
 from tools.scan import scan_nodes
-from prompts.eks_agent_prompt import eks_prompt
+from tools.bedrock import get_bedrock_client
+from langgraph.prebuilt import create_react_agent
 from prompts.eks_chat_prompt import get_eks_chat_prompt
 
-llm = get_bedrock_client()
-prompt = get_eks_chat_prompt()
+model = get_bedrock_client()
 tools = [scan_nodes]
-llm_chain = LLMChain(llm=llm, prompt=prompt)
+prompt = get_eks_chat_prompt()
 
-agent = initialize_agent(
+agent_executor = create_react_agent(
+    model=model,
     tools=tools,
-    llm=llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True
+    prompt=prompt
 )
 
-def run_diagnosis(user_input):
-    return agent.run(user_input)
+def run_diagnosis(user_input: str) -> str:
+    return agent_executor.invoke({"input": user_input})

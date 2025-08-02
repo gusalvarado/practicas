@@ -3,9 +3,10 @@ langchain
 unstructured
 pydantic
 langchain_aws
-langchain_community
 langchain_core
+langchain_community
 bcrypt
 psycopg2-binary
 redis
 streamlit-cookies-controller
+langgraph

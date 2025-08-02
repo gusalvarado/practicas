@@ -1,7 +1,7 @@
 import streamlit as st
 from core.chat import chat
 from tools.auth import Authenticator
-from tools.sessions import get_session
+from core.admin import admin
 
 auth = Authenticator()
 auth.restore_session()
@@ -16,15 +16,13 @@ else:
     user = st.session_state.user_info
     st.sidebar.success(f"{user['name']} ({user['role']})")
 
-    menu = ["Chat"] if user["role"] == "admin" else ["Chat"]
+    menu = ["Chat", "Admin"] if user["role"] == "admin" else ["Chat"]
     st.session_state.view = st.radio("Navigate", menu, horizontal=True)
-
-    st.write("Session ID:", st.session_state.get("session_id"))
-    st.write("Authenticated:", st.session_state.get("authenticated"))
-    st.write("User Info:", st.session_state.get("user_info"))
 
     match st.session_state.view:
         case "Chat":
             chat()
+        case "Admin":
+            admin()
         case _:
             st.error("Invalid view")
