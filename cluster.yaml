@@ -14,6 +14,8 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   Subnet2:
     Type: AWS::EC2::Subnet::Id
+  Subnet3:
+    Type: AWS::EC2::Subnet::Id
   ImageId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/eks/optimized-ami/1.32/amazon-linux-2/recommended/image_id
@@ -110,4 +112,17 @@ Resources:
         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
         - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
         - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSLoadBalancingPolicy
+      Policies:
+      - PolicyName: load-balancers
+        PolicyDocument:
+          Version: "2008-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+              - elasticloadbalancing:*
+              - ec2:*
+              - shield:GetSubscriptionState
+            Resource:
+              - '*'
       Path: /
